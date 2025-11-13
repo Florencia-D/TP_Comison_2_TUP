@@ -1,3 +1,4 @@
+
 // src/config/prisma.js
 const { PrismaClient } = require('@prisma/client');
 
@@ -14,3 +15,4 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = prisma;
+
