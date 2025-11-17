@@ -1,5 +1,4 @@
 # 🧾 Auditoría — Semana 3  
-
 =======
 ### Grupo Nº: 6
 ### Tema asignado: biblioteca
@@ -15,8 +14,6 @@
 Describir brevemente lo encontrado al abrir el proyecto:
 
 - Errores detectados (bugs, warnings, import fallidos, rutas rotas, etc.)
-
-
 No había errores porque estaba vacío
 
 - Faltantes respecto a Semana 1 (carpetas vacías, componentes incompletos, etc.)
@@ -24,7 +21,6 @@ Semana 1 completa. Semana sin hacer
 
 - Problemas de estructura, naming, uso de git o dependencias
 Tenian algunas partes de la estructura, pero faltaban dependencias, al no realizarse la actividad de la semana 2.
-
 
 > Este apartado debe completarse **ANTES** de modificar el código.
 
