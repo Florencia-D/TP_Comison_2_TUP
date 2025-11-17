@@ -179,8 +179,13 @@ const register = async (req, res) => {
     const hash = await hashPassword(contraseña);
 
     await prisma.usuarios.create({
-      data: { nombre_usuario: usuario, contrasena: hash, email },
-    });
+  data: {
+    nombre_usuario: usuario,
+    contrase_a: hash,   // ← ESTE CAMPO ES EL CORRECTO
+    email
+  },
+});
+
 
 
     return res.status(201).json({ message: "Usuario registrado con éxito" });
@@ -195,13 +200,16 @@ const login = async (req, res) => {
   try {
     const { usuario, contraseña } = req.body;
 
-    const user = await prisma.usuarios.findUnique({
+    const user = await prisma.usuarios.findFirst({
       where: { nombre_usuario: usuario },
     });
 
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
 
-    const esValida = await comparePassword(String(contraseña), String(user.contrasena));
+    const esValida = await comparePassword(
+      String(contraseña),
+      String(user.contrase_a)
+    );
 
     if (!esValida) return res.status(401).json({ message: "Contraseña incorrecta" });
 
@@ -211,12 +219,17 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.status(200).json({ message: "Usuario logueado con éxito", token });
+    return res.status(200).json({
+      message: "Usuario logueado con éxito",
+      token,
+    });
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error en el servidor", error });
   }
 };
+
 
 //  RECUPERAR CONTRASEÑA
 const recuperarPassword = async (req, res) => {
@@ -225,7 +238,10 @@ const recuperarPassword = async (req, res) => {
 
     if (!mail) return res.status(400).json({ message: "El email es obligatorio" });
 
-    const user = await prisma.usuarios.findUnique({ where: { email: mail } });
+    const user = await prisma.usuarios.findFirst({
+  where: { email: mail },
+});
+
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
 
     const token = jwt.sign(

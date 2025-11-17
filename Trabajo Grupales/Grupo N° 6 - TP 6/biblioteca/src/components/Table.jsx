@@ -1,24 +1,25 @@
-export default function Table({ columns = [], data = [] }) {
-  if (!data || data.length === 0) return <p>No hay datos para mostrar.</p>;
-
-  return (
-    <table className="min-w-full text-sm border">
-      <thead className="bg-gray-100">
-        <tr>
-          {columns.map((col) => (
-            <th key={col.key} className="px-3 py-2 text-left">{col.label}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, idx) => (
-          <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-            {columns.map((col) => (
-              <td key={col.key} className="px-3 py-2">{row[col.key]}</td>
-            ))}
-          </tr>
+// src/components/Table.jsx
+const Table = ({ columns, data, actions }) => (
+  <table className="min-w-full border border-gray-300">
+    <thead className="bg-gray-100">
+      <tr>
+        {columns.map((col) => (
+          <th key={col} className="p-2 border">{col}</th>
         ))}
-      </tbody>
-    </table>
-  );
-}
+        {actions && <th className="p-2 border">Acciones</th>}
+      </tr>
+    </thead>
+    <tbody>
+      {data.map((row, idx) => (
+        <tr key={idx} className="even:bg-gray-50">
+          {columns.map((col) => (
+            <td key={col} className="p-2 border">{row[col]}</td>
+          ))}
+          {actions && <td className="p-2 border flex gap-2">{actions(row)}</td>}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
+export default Table;

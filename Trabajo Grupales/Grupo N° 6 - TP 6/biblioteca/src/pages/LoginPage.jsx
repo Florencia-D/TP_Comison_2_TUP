@@ -1,43 +1,111 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import InputField from "../components/InputField";
-import Button from "../components/Button";
-import { loginRequest } from "../services/authService";
-import { useAuthStore } from "../store/useAuthStore";
+import { useNavigate, Link } from "react-router-dom";
 
-export default function LoginPage() {
-  const [form, setForm] = useState({ usuario: "", contraseña: "" });
-  const [error, setError] = useState("");
+const LoginPage = () => {
+  const [usuario, setUsuario] = useState("");
+  const [contrasena, setContrasena] = useState("");
+
   const navigate = useNavigate();
 
-  const setUser = useAuthStore((state) => state.setUser);
-  const setToken = useAuthStore((state) => state.setToken);
-
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+
     try {
-      const data = await loginRequest(form);
-      setUser(data.user);
-      setToken(data.token);
+      const res = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usuario,
+          contraseña: contrasena
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Credenciales incorrectas");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+
       navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      setError("Credenciales inválidas o error en el servidor.");
+    } catch (error) {
+      alert("Error en el servidor");
     }
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-semibold mb-4 text-center">Iniciar sesión</h1>
-        <InputField label="Usuario" name="usuario" value={form.usuario} onChange={handleChange} />
-        <InputField label="Contraseña" name="contraseña" type="password" value={form.contraseña} onChange={handleChange} />
-        {error && <p className="text-red-600 mb-2">{error}</p>}
-        <Button type="submit" className="w-full">Ingresar</Button>
-      </form>
-    </main>
+    <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-blue-300 p-4">
+
+      {/* 🔹 BOTÓN VOLVER AL INICIO */}
+      <Link
+        to="/"
+        className="absolute top-5 right-5 bg-blue-600 text-white px-4 py-2 rounded-lg 
+                   shadow-md hover:bg-blue-700 transition-all"
+      >
+        Volver al inicio
+      </Link>
+
+      <div className="bg-white shadow-2xl rounded-xl p-8 w-full max-w-md">
+
+        <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          Iniciar Sesión
+        </h1>
+
+        <form onSubmit={handleLogin} className="space-y-5">
+
+          {/* Usuario */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              Usuario
+            </label>
+            <input
+              type="text"
+              value={usuario}
+              onChange={(e) => setUsuario(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Ingresa tu usuario"
+              required
+            />
+          </div>
+
+          {/* Contraseña */}
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              value={contrasena}
+              onChange={(e) => setContrasena(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+              placeholder="Ingresa tu contraseña"
+              required
+            />
+          </div>
+
+          {/* Botón */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200"
+          >
+            Entrar
+          </button>
+          
+        </form>
+
+        {/* Link a registro */}
+        <p className="text-center text-gray-700 mt-5">
+          ¿No tienes cuenta?
+          <Link to="/register" className="text-blue-600 font-semibold hover:underline ml-1">
+            Registrate aquí
+          </Link>
+        </p>
+
+      </div>
+    </div>
   );
-}
+};
+
+export default LoginPage;

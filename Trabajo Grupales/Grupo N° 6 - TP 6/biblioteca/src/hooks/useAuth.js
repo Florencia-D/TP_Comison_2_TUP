@@ -1,10 +1,27 @@
-// src/store/useAuthStore.js
-import create from "zustand";
+// src/hooks/useAuth.js
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const useAuthStore = create((set) => ({
-  user: null,
-  token: null,
-  setUser: (user) => set({ user }),
-  setToken: (token) => set({ token }),
-  logout: () => set({ user: null, token: null }),
-}));
+export const useAuth = () => {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) setUser({ token });
+  }, []);
+
+  const loginUser = (token) => {
+    localStorage.setItem("token", token);
+    setUser({ token });
+    navigate("/dashboard");
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
+  };
+
+  return { user, loginUser, logout };
+};

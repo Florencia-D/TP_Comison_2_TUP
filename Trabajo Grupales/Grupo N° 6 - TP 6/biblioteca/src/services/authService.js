@@ -1,12 +1,14 @@
 // src/services/authService.js
 import api from "./api";
 
-export const registerRequest = async (user) => {
-  const { data } = await api.post("/auth/register", user);
-  return data;
+export const login = async (usuario, contrasena) => {
+  const res = await api.post("/auth/login", { usuario, contraseña: contrasena });
+  return res.data;
 };
 
-export const loginRequest = async (credentials) => {
-  const { data } = await api.post("/auth/login", credentials);
-  return data;
+export const register = async (usuario, contrasena, email) => {
+  const res = await api.post("/auth/register", { usuario, contraseña: contrasena, email });
+  return res.data;
 };
+
+

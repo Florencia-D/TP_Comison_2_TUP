@@ -1,15 +1,38 @@
+// src/pages/HomePage.jsx
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
 
-export default function HomePage() {
+const HomePage = () => {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-      <h1 className="text-3xl font-bold mb-3">Biblioteca</h1>
-      <p className="mb-6">Gestioná libros y usuarios.</p>
-      <div className="flex gap-2">
-        <Button><Link to="/login">Ingresar</Link></Button>
-        <Button><Link to="/register">Registrarse</Link></Button>
+    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-100 to-blue-300 p-4">
+      <div className="bg-white shadow-2xl rounded-2xl p-10 w-full max-w-lg text-center">
+
+        <h1 className="text-4xl font-extrabold text-blue-700 mb-4">
+          📚 Bienvenido a la Biblioteca
+        </h1>
+
+        <p className="text-gray-600 mb-8 text-lg">
+          Gestioná usuarios, libros y préstamos de manera simple y rápida.
+        </p>
+
+        <div className="flex flex-col gap-4 mt-6">
+
+          <Link to="/login">
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 shadow-md">
+              Iniciar sesión
+            </button>
+          </Link>
+
+          <Link to="/register">
+            <button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-all duration-200 shadow-md">
+              Registrarme
+            </button>
+          </Link>
+
+        </div>
+
       </div>
-    </main>
+    </div>
   );
-}
+};
+
+export default HomePage;

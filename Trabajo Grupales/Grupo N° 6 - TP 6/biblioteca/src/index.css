@@ -1,6 +1,6 @@
-/* index.css */
+/* index.css
 
-/* Reset básico */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -14,7 +14,6 @@ body {
   line-height: 1.6;
 }
 
-/* Cabecera */
 header {
   background-color: #ffffff;
   border-bottom: 1px solid #e2e8f0;
@@ -34,7 +33,7 @@ header p {
   color: #64748b;
 }
 
-/* Botones */
+
 button {
   cursor: pointer;
   border: none;
@@ -49,7 +48,7 @@ button:hover {
   opacity: 0.9;
 }
 
-/* Botón primario */
+
 .btn-primary {
   background-color: #3b82f6;
   color: #fff;
@@ -59,7 +58,6 @@ button:hover {
   background-color: #2563eb;
 }
 
-/* Inputs */
 input, select, textarea {
   width: 100%;
   padding: 0.5rem 0.75rem;
@@ -75,7 +73,7 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
 }
 
-/* Cards */
+
 .card {
   background-color: #fff;
   padding: 1rem;
@@ -84,7 +82,7 @@ input:focus, select:focus, textarea:focus {
   margin-bottom: 1rem;
 }
 
-/* Table */
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -107,19 +105,19 @@ table tr:nth-child(even) {
   background-color: #f8fafc;
 }
 
-/* Formularios centrados */
+
 form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* Main */
+
 main {
   padding: 2rem;
 }
 
-/* Modales */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -142,14 +140,14 @@ main {
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Mensajes de error */
+
 .text-error {
   color: #dc2626;
   font-size: 0.875rem;
   margin-top: -0.5rem;
 }
 
-/* Enlaces */
+
 a {
   color: #3b82f6;
   text-decoration: none;
@@ -157,4 +155,12 @@ a {
 
 a:hover {
   text-decoration: underline;
+} */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
 }
