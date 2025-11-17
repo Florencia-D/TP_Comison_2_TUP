@@ -6,10 +6,11 @@ router.get('/health', (req, res) => res.json({ ok: true }));
 
 // Monta todas las rutas de autenticación
 router.use('/auth', require('./auth.routes'));
-router.use('/alumnos', require('./alumnos'));
-router.use('/libros', require('./libros'))
-router.use('/prestamos',require('./prestamos'))
-router.use('/mail',require('./mail.routes'))
+router.use('/alumnos', require('./alumnosRoutes'));
+router.use('/libros', require('./librosRoutes'));
+router.use('/prestamos', require('./prestamosRoutes'));
+router.use('/mail', require('./mailRoutes'));
+
 
 
 module.exports = router;
