@@ -148,6 +148,7 @@
 
 
 // src/controllers/auth.controller.js
+// src/controllers/auth.controller.js
 const prisma = require("../config/prisma");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -157,7 +158,7 @@ const { hashPassword, comparePassword } = require("../utils/hash.utils");
 const SECRET_KEY = process.env.JWT_SECRET;
 const FRONT_URL = process.env.FRONT_URL || "http://localhost:3000";
 
-// 📌 REGISTRAR USUARIO
+//  REGISTRAR USUARIO
 const register = async (req, res) => {
   try {
     const { usuario, contraseña, email } = req.body;
@@ -166,9 +167,10 @@ const register = async (req, res) => {
       return res.status(400).json({ message: "usuario, contraseña y email son obligatorios" });
     }
 
-    const userExists = await prisma.usuarios.findUnique({
-      where: { nombre_usuario: usuario },
-    });
+    const userExists = await prisma.usuarios.findFirst({
+  where: { nombre_usuario: usuario },
+});
+
 
     if (userExists) {
       return res.status(400).json({ message: "El usuario ya existe" });
@@ -177,29 +179,38 @@ const register = async (req, res) => {
     const hash = await hashPassword(contraseña);
 
     await prisma.usuarios.create({
-      data: { nombre_usuario: usuario, contraseña: hash, email },
-    });
+  data: {
+    nombre_usuario: usuario,
+    contrase_a: hash,   // ← ESTE CAMPO ES EL CORRECTO
+    email
+  },
+});
+
+
 
     return res.status(201).json({ message: "Usuario registrado con éxito" });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error al registrarse", error: error.message });
-
   }
 };
 
-// 📌 INICIAR SESIÓN
+//  INICIAR SESIÓN
 const login = async (req, res) => {
   try {
     const { usuario, contraseña } = req.body;
 
-    const user = await prisma.usuarios.findUnique({
+    const user = await prisma.usuarios.findFirst({
       where: { nombre_usuario: usuario },
     });
 
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
 
-    const esValida = await comparePassword(String(contraseña), String(user.contraseña));
+    const esValida = await comparePassword(
+      String(contraseña),
+      String(user.contrase_a)
+    );
+
     if (!esValida) return res.status(401).json({ message: "Contraseña incorrecta" });
 
     const token = jwt.sign(
@@ -208,21 +219,29 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.status(200).json({ message: "Usuario logueado con éxito", token });
+    return res.status(200).json({
+      message: "Usuario logueado con éxito",
+      token,
+    });
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error en el servidor", error });
   }
 };
 
-// 📌 RECUPERAR CONTRASEÑA
+
+//  RECUPERAR CONTRASEÑA
 const recuperarPassword = async (req, res) => {
   try {
     const { mail } = req.body;
 
     if (!mail) return res.status(400).json({ message: "El email es obligatorio" });
 
-    const user = await prisma.usuarios.findUnique({ where: { email: mail } });
+    const user = await prisma.usuarios.findFirst({
+  where: { email: mail },
+});
+
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
 
     const token = jwt.sign(
@@ -231,7 +250,6 @@ const recuperarPassword = async (req, res) => {
       { expiresIn: "15m" }
     );
 
-    // 👇 AQUÍ estaba el error: faltaban backticks
     const link = `${FRONT_URL}/auth/cambio_password/${token}`;
 
     await enviarEmailRecuperacion(mail, link);
@@ -243,7 +261,7 @@ const recuperarPassword = async (req, res) => {
   }
 };
 
-// 📌 CAMBIAR CONTRASEÑA (DESDE EMAIL)
+//  CAMBIAR CONTRASEÑA (DESDE EMAIL)
 const cambioPasswordRecuperado = async (req, res) => {
   try {
     const { token } = req.params;
@@ -257,7 +275,7 @@ const cambioPasswordRecuperado = async (req, res) => {
 
     const updatedUser = await prisma.usuarios.update({
       where: { usuario_id: decoded.id },
-      data: { contraseña: hashedPassword },
+      data: { contrasena: hashedPassword },
     });
 
     if (!updatedUser) {

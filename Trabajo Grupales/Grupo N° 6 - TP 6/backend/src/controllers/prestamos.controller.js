@@ -1,4 +1,19 @@
-const db = require("../config/DB");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+
+// // Obtener todos los préstamos
+// const getAll = (req, res) => {
+//   const consulta = "SELECT * FROM prestamos";
+
+//   db.query(consulta, (err, rows) => {
+//     if (err) {
+//       return res.status(500).json(err);
+//     }
+
+//     return res.json(rows);
+//   });
+// };
 
 // // Obtener todos los préstamos
 // const getAll = (req, res) => {
@@ -19,7 +34,8 @@ const getAll = async (req, res) => {
     const prestamos = await prisma.prestamos.findMany();
     return res.json(prestamos);
   } catch (error) {
-    return res.status(500).json({ error });
+    console.error(error); 
+    return res.status(500).json({ message: error.message });
   }
 };
 
