@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 // Conexión a la base de datos
-require("./config/DB");
+require("./config/prisma");
 
 // Importar rutas
 const librosRoutes = require("./routes/libros");

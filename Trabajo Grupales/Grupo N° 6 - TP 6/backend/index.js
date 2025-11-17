@@ -11,11 +11,3 @@ app.listen(PORT, () => {
 
 
 
-// // index.js
-// import 'dotenv/config';              // carga .env
-// import app from './src/app.js';      // ⬅️ IMPORT (no require), con .js
-
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`🚀 Server on http://localhost:${PORT}`);
-// });
